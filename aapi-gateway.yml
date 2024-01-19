@@ -1,0 +1,100 @@
+openapi: 3.0.2
+servers:
+  - url: /aapi
+info:
+  version: 1.0.0
+  title: AAPI Gateway schema
+paths:
+  /accountBalance:
+    post:
+      summary: Account balance in several chains
+      description: Returns geven address balance in all requested chains
+      operationId: getAccountBalance
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalancesReply'
+      requestBody:
+        description: Address in several chains
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BalancesRequest'
+components:
+  schemas:
+    BalancesRequest:
+      required:
+        - walletAddress
+      properties:
+        walletAddress:
+          type: string
+          example: "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263"
+        blockchain:
+          type: array
+          items:
+            type: string
+        blockHeight:
+          type: number
+        onlyWhitelisted:
+          type: boolean
+        nativeFirst:
+          type: boolean
+        pageSize:
+          type: string
+        pageToken:
+          type: string
+      type: object
+    Balance:
+      properties:
+        blockchain:
+          type: string
+        tokenName:
+          type: string
+        tokenSymbol:
+          type: string
+        tokenDecimals:
+          type: number
+        tokenType:
+          type: string
+        contractAddress:
+          type: string
+        holderAddress:
+          type: string
+        balance:
+          type: string
+        balanceRawInteger:
+          type: string
+        balanceUsd:
+          type: string
+        tokenPrice:
+          type: string
+        thumbnail:
+          type: string
+      type: object
+    BalancesReply:
+      required:
+      properties:
+        nextPageToken:
+          type: string
+        totalBalanceUsd:
+          type: string
+        totalCount:
+          type: number
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Balance'
+        blockHeight:
+          type: number
+      type: object
+  requestBodies:
+    BalancesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BalancesRequest'
+      description: Pet object that needs to be added to the store
